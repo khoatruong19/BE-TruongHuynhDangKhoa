@@ -1,8 +1,8 @@
 import { users } from "src/store/db/schema";
-import { asc, desc, eq, InferColumnsDataTypes } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { getDB } from "@/store/index";
 import { FilterUsersSchema, InsertUserSchema, UpdateUserSchema, UsersColumn } from "./users.schema";
-import { PgSelect, PgSelectQueryBuilder, PgTable } from "drizzle-orm/pg-core";
+import { PgSelect, PgSelectQueryBuilder } from "drizzle-orm/pg-core";
 import { throwDatabaseError } from "@/utils/helpers";
 
 // query builders
