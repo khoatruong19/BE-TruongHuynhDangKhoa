@@ -114,6 +114,18 @@ router.patch(
  *         required: false
  *         schema:
  *           type: boolean
+ *       - name: order_by
+ *         in: query
+ *         description: Order users by table columns
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - name: sort
+ *         in: query
+ *         description: Sort users by ascending or decreasing order
+ *         required: false
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Success

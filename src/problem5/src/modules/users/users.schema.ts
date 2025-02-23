@@ -2,6 +2,9 @@ import { users } from "@/store/db/schema";
 import { createUpdateSchema, createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export type UsersColumn = keyof typeof users.$inferSelect;
+const userColumns = Object.keys(users).filter((key) => key !== "_" && key !== "enableRLS") as UsersColumn[];
+
 /**
  * @openapi
  * components:
@@ -133,6 +136,8 @@ export const userIdParams = z.object({
  *        - limit
  *        - offset
  *        - is_active
+ *        - order_by
+ *        - sort
  *      properties:
  *        limit:
  *          type: number
@@ -143,6 +148,12 @@ export const userIdParams = z.object({
  *        is_active:
  *          type: boolean
  *          default: none
+ *        order_by:
+ *          type: string
+ *          default: none
+ *        sort:
+ *          type: string
+ *          default: none
  */
 export const filterUsersQuery = z
   .object({
@@ -152,11 +163,15 @@ export const filterUsersQuery = z
       .enum(["true", "false"])
       .transform((value) => value === "true")
       .optional(),
+    order_by: z.enum(userColumns as [string, ...string[]]).optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
   })
   .transform((query) => ({
     limit: query.limit,
     offset: query.offset,
     isActive: query.is_active,
+    orderBy: query.order_by as UsersColumn,
+    sort: query.sort,
   }));
 export type FilterUsersSchema = z.infer<typeof filterUsersQuery>;
 

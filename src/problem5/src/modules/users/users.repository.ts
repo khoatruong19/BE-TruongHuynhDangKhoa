@@ -1,13 +1,17 @@
 import { users } from "src/store/db/schema";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq, InferColumnsDataTypes } from "drizzle-orm";
 import { getDB } from "@/store/index";
-import { FilterUsersSchema, InsertUserSchema, UpdateUserSchema } from "./users.schema";
-import { PgSelect, PgSelectQueryBuilder, QueryBuilder } from "drizzle-orm/pg-core";
+import { FilterUsersSchema, InsertUserSchema, UpdateUserSchema, UsersColumn } from "./users.schema";
+import { PgSelect, PgSelectQueryBuilder, PgTable } from "drizzle-orm/pg-core";
 import { throwDatabaseError } from "@/utils/helpers";
 
 // query builders
 function withActive<T extends PgSelectQueryBuilder>(qb: T, isActive: boolean) {
   return qb.where(eq(users.isActive, isActive));
+}
+function withOrdering<T extends PgSelect>(qb: T, orderBy: UsersColumn, sort = "asc") {
+  if (sort === "asc") return qb.orderBy(asc(users[orderBy]));
+  return qb.orderBy(desc(users[orderBy]));
 }
 function withPagination<T extends PgSelect>(qb: T, limit = 10, offset = 0) {
   return qb.limit(limit).offset(offset);
@@ -49,10 +53,11 @@ export default {
       throwDatabaseError(error, "getById: failed to get user by id");
     }
   },
-  findAll: async function ({ limit, offset, isActive }: FilterUsersSchema) {
+  findAll: async function ({ limit, offset, isActive, orderBy = "id", sort = "asc" }: FilterUsersSchema) {
     try {
       let query = getDB().select().from(users).$dynamic();
       query = withPagination(query, limit, offset);
+      query = withOrdering(query, orderBy, sort);
       if (isActive !== undefined) {
         query = withActive(query, isActive);
       }
