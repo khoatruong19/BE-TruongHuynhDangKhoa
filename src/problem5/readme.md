@@ -42,6 +42,19 @@ Make sure that these tools are already installed on your local machine:
 
 ## 🔥 API Description
 
+### Models
+
+**Users**
+| Field | Type | Description | Constraints |
+| ------------ | ----------------------------- | ------------------------------------- | -------------------------------------------------------- |
+| id | integer | Unique identifier for each user | Primary Key, Auto-increment |
+| first_name | text | User's first name | NOT NULL |
+| last_name | text | User's last name | NOT NULL |
+| email | text | User's email address | NOT NULL, Unique |
+| is_active | boolean | Indicates if the user is active | NOT NULL |
+| created_at | timestamp with time zone | Date and time when the user was created | DEFAULT now(), NOT NULL |
+| updated_at | timestamp with time zone | Date and time when the user was last updated | DEFAULT now(), NOT NULL
+
 ### Endpoints
 
 | Method | Endpoint      | Description                |
