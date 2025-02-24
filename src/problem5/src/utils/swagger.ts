@@ -2,6 +2,7 @@ import { Express, Request, Response } from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { logger } from "./logger";
+import { config, isDev } from "./config";
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -24,5 +25,6 @@ export function swaggerDocs(app: Express, port: number) {
     res.send(swaggerSpec);
   });
 
-  logger.info("docs available at http://localhost:%d/v1/docs", port);
+  const host = isDev ? `http://localhost:${port}` : config.HOST;
+  logger.info("docs available at %s/v1/docs", host);
 }

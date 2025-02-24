@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { CustomError, ValidationError, ValidationErrors } from "./errors";
 import { StatusCodes } from "http-status-codes";
+import { isDev } from "./config";
 
 interface BaseResponse {
   status: "error" | "success";
@@ -27,7 +28,7 @@ export function writeErrorResponse(res: Response, err: CustomError) {
     status: "error",
     code: err.status,
     message: err.message,
-    stack: err.stack,
+    stack: isDev ? err.stack : undefined,
   };
   res.status(err.status).send(errorResponse);
 }
@@ -38,6 +39,7 @@ export function writeValidationErrorResponse(res: Response, err: ValidationError
     code: StatusCodes.BAD_REQUEST,
     message: err.message,
     errors: err.errors.errors,
+    stack: isDev ? err.stack : undefined,
   };
   res.status(StatusCodes.BAD_REQUEST).send(errorResponse);
 }
