@@ -24,8 +24,6 @@
   <img src="ER-diagram.png" alt="ER diagram">
 </p>
 
-## 🚀 Data Model Design
-
 ### **1. `users`**
 
 The `users` table will store the information of the users, including their score, which can be updated when they complete actions that trigger a score change.
